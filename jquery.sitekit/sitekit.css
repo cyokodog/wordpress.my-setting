@@ -1,0 +1,82 @@
+/* social buttons */
+.social-buttons-container{
+	overflow:hidden;
+	line-height:.1;
+}
+.social-buttons-wrapper{
+	overflow:hidden;
+	float:left;
+}
+
+.social-buttons-facebook{
+	width:115px;
+}
+.social-buttons-hatebu{
+	width:67px;
+}
+.social-buttons-twitter{
+	width:99px;
+}
+.social-buttons-googleplus{
+	width:77px;
+}
+
+
+.social-buttons-large .social-buttons-wrapper{
+	margin-right:4px;
+	padding-right:0;
+}
+
+.social-buttons-large .social-buttons-facebook{
+	width:72px;
+}
+.social-buttons-large .social-buttons-hatebu{
+	width:81px;
+}
+.social-buttons-large .social-buttons-twitter{
+	width:73px;
+}
+.social-buttons-large .social-buttons-googleplus{
+	width:51px;
+}
+
+
+/* hatebu users */
+a:visited.hatebu-users,
+a.hatebu-users{
+	margin-left:4px;
+	font-weight:bold;
+	color:#ff5577;
+}
+
+
+div.gsc-control-cse{
+	border:none!important;
+	background:transparent!important;
+	padding:0!important;
+}
+div.gsc-control-cse form.gsc-search-box,
+div.gsc-control-cse table.gsc-search-box{
+	margin:0!important;
+}
+div.gsc-control-cse td.gsc-input{
+	padding:0!important;
+	vertical-align:top!important;
+}
+div.gsc-control-cse td.gsc-search-button{
+	vertical-align:top!important;
+}
+div.gsc-control-cse input.gsc-search-button{
+	margin:0!important;
+}
+.hide-gcse-button div.gsc-control-cse input.gsc-search-button{
+	display:none;
+}
+
+
+a:hover.external{
+	padding-right:14px;
+	background:url("external.gif") no-repeat right 3px #ffffcc;
+	color:#ff00ff;
+}
+

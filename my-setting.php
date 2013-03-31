@@ -22,6 +22,9 @@ class MySetting {
 		add_action('pre_ping', array($this, 'prePingAction'));
 		add_action('wp_print_scripts', array($this, 'wpPrintScriptsAction'));
 
+		add_action( 'wp_enqueue_scripts', array($this, 'wpEnqueueScripts'), 50 );
+
+
 		if($o->getParam( 'wp_ver' ) == '0') remove_action('wp_head','wp_generator');
 		if($o->getParam( 'cus_nav' ) == '1') add_theme_support('menus');
 		if($o->getParam( 'page_excerpt' ) == '1') add_post_type_support( 'page', 'excerpt' );
@@ -38,7 +41,7 @@ class MySetting {
 		add_menu_page('My Setting','My Setting',  'level_8', __FILE__, array($this,'mySettingPage'));
 	}
 
-	function theSelectHtml($name,$val,$selected){
+	function theYesNoHtml($name,$val,$selected){
 		$yes = ($this->getParam( $name ) == $val ? $selected : ($selected == 'selected' ? '' : 'selected'));
 		$no = ($yes == '' ? 'selected' : '');
 		echo '
@@ -49,8 +52,32 @@ class MySetting {
 		';
 	}
 
-	function theInputHtml($name){
-		echo '<input name="mysetting_options['.$name.']" type="text" value="'.$this->getParam( $name ).'" class="regular-text" />';
+	function theSocialButtonHtml($name){
+		echo '
+			<select name="mysetting_options['.$name.']">
+				<option value="0">非表示</option>
+		';
+		for($i = 1; $i <= 4; $i ++){
+			echo '<option value="'.$i.'" '.($this->getParam( $name ) == $i ? 'selected' : '').'>'.$i.'番目に表示</option>';
+		}
+		echo '
+			</select>
+		';
+	}
+
+
+
+	function theInputHtml($name,$placeholder="",$class="regular-text"){
+		echo '<input name="mysetting_options['.$name.']" type="text" value="'.$this->getParam( $name ).'" class="'.$class.'" placeholder="'.$placeholder.'"/>';
+	}
+
+	function theCheckboxHtml($name,$display=""){
+		$checked = $this->getParam( $name ) == '1' ? 'checked' : '';
+		echo '<label><input name="mysetting_options['.$name.']" type="checkbox" value="1" '.$checked.'/> '.$display. '</label> ';
+	}
+
+	function theTextareaHtml($name,$placeholder){
+		echo '<textarea name="mysetting_options['.$name.']" class="large-text code" placeholder="'.$placeholder.'">'.$this->getParam( $name ).'</textarea>';
 	}
 
 	function loadOptions(){
@@ -62,6 +89,7 @@ class MySetting {
 	}
 
 	function saveOptions( $options ){
+		delete_option('mysetting_options');
 		update_option('mysetting_options', $options);
 		return 'Options saved.';
 	}
@@ -69,7 +97,6 @@ class MySetting {
 	function mySettingPage() {
 
 		$o = $this;
-
 		if ( isset($_POST['mysetting_options'])) {
 			check_admin_referer('shoptions');
 			$message = $this->saveOptions($_POST['mysetting_options']);
@@ -84,6 +111,12 @@ class MySetting {
 		}
 
 		?>
+			<style>
+				.indent{padding-left:26px!important;}
+				tr.social-button-sort label{
+					margin-right:16px;
+				}
+			</style>
 			<div class="wrap">
 				<div id="icon-options-general" class="icon32"><br /></div>
 				<h2>My Setting</h2>
@@ -96,47 +129,86 @@ class MySetting {
 						</tr>
 						<tr valign="top">
 							<th>WordPress のバージョンを出力する</th>
-							<td><?php $o->theSelectHtml('wp_ver','0','') ?></td>
+							<td><?php $o->theYesNoHtml('wp_ver','0','') ?></td>
 						</tr>
 						<tr valign="top">
 							<th>カスタムナビゲーションメニューを有効にする</th>
-							<td><?php $o->theSelectHtml('cus_nav','1','selected') ?></td>
+							<td><?php $o->theYesNoHtml('cus_nav','1','selected') ?></td>
 						</tr>
 						<tr valign="top">
 							<th>セルフピンバックを無効にする</th>
-							<td><?php $o->theSelectHtml('self_pin','1','selected') ?></td>
+							<td><?php $o->theYesNoHtml('self_pin','1','selected') ?></td>
 						</tr>
 						<tr valign="top">
 							<th>固定ページでの抜粋を有効にする</th>
-							<td><?php $o->theSelectHtml('page_excerpt','1','selected') ?></td>
+							<td><?php $o->theYesNoHtml('page_excerpt','1','selected') ?></td>
 						</tr>
 						<tr valign="top">
 							<th>自動保存を無効にする</th>
-							<td><?php $o->theSelectHtml('no_autosave','1','selected') ?></td>
+							<td><?php $o->theYesNoHtml('no_autosave','1','selected') ?></td>
 						</tr>
 						<tr valign="top">
 							<th>外部サイトのリンクに target="_blank" を設定する</th>
-							<td><?php $o->theSelectHtml('external','1','selected') ?></td>
+							<td><?php $o->theYesNoHtml('external','1','selected') ?></td>
 						</tr>
 						<tr valign="top">
 							<th>Google Code Prettify を有効にする</th>
-							<td><?php $o->theSelectHtml('prettify','1','selected') ?></td>
+							<td><?php $o->theYesNoHtml('prettify','1','selected') ?></td>
+						</tr>
+						<tr valign="top">
+							<th>Google Custom Search ID</th>
+							<td><?php $o->theInputHtml('google_search_id') ?></td>
+						</tr>
+						<tr valign="top">
+							<th class="indent">検索ウィジェットを置き換える</th>
+							<td><?php $o->theYesNoHtml('google_search_replace','1','selected') ?></td>
+						</tr>
+						<tr valign="top">
+							<th class="indent">フォーム挿入先の jQuery セレクタ<br/>※置換する場合は指定不要</th>
+							<td><?php $o->theInputHtml('google_search_area','例) div.search_form') ?></label></td>
+						</tr>
+						<tr valign="top">
+							<th>リンクにはてブ件数を表示する</th>
+							<td>
+								<?php $o->theYesNoHtml('hatebu_users','1','selected') ?><br/>
+							</td>
+						</tr>
+						<tr valign="top">
+							<th class="indent">対象リンクの jQuery セレクタ</th>
+							<td><?php $o->theInputHtml('hatebu_users_code','例) #sidebar a') ?></label></td>
+						</tr>
+						<tr valign="top" class="social-button-sort">
+							<th>ソーシャルボタンの表示</th>
+							<td>
+								<label>はてブ<?php $o->theSocialButtonHtml('hatebu_sort') ?></label>
+								<label>Twitter<?php $o->theSocialButtonHtml('twitter_sort') ?></label>
+								<label>Facebook<?php $o->theSocialButtonHtml('facebook_sort') ?></label>
+								<label>Google+<?php $o->theSocialButtonHtml('googleplus_sort') ?></label>
+							</td>
+						</tr>
+						<tr valign="top">
+							<th class="indent">対象リンクの jQuery セレクタ</th>
+							<td><?php $o->theInputHtml('social_btn_link','例) article h2 a') ?></label></td>
+						</tr>
+						<tr valign="top">
+							<th class="indent">ボタン挿入先の jQuery セレクタ</th>
+							<td><?php $o->theInputHtml('social_btn_area','例) article div.social_area') ?></label></td>
+						</tr>
+						<tr valign="top">
+							<th class="indent">大きいボタンにする</th>
+							<td><?php $o->theYesNoHtml('social_large_btn','1','selected') ?></label></td>
 						</tr>
 						<tr valign="top">
 							<th>アイキャッチ画像を有効にする</th>
-							<td><?php $o->theSelectHtml('post_thum','1','selected') ?></td>
+							<td><?php $o->theYesNoHtml('post_thum','1','selected') ?></td>
 						</tr>
 						<tr valign="top">
-							<th>アイキャッチ画像のサイズ（幅）</th>
-							<td><?php $o->theInputHtml('thum_width') ?></td>
+							<th class="indent">画像のサイズ（幅 × 高さ）</th>
+							<td><?php $o->theInputHtml('thum_width','','small-text') ?> × <?php $o->theInputHtml('thum_height','','small-text') ?></td>
 						</tr>
 						<tr valign="top">
-							<th>アイキャッチ画像のサイズ（高さ）</th>
-							<td><?php $o->theInputHtml('thum_height') ?></td>
-						</tr>
-						<tr valign="top">
-							<th>アイキャッチ画像を切り抜きモードにする</th>
-							<td><?php $o->theSelectHtml('thum_cut','1','selected') ?></td>
+							<th class="indent">切り抜きモードにする</th>
+							<td><?php $o->theYesNoHtml('thum_cut','1','selected') ?></td>
 						</tr>
 					</table>
 					<p class="submit"><input type="submit" class="button-primary" value="変更を保存" /></p>
@@ -146,49 +218,11 @@ class MySetting {
 	}
 
 	function wpFooterAction(){
-		$o = $this;
-		if($o->getParam( 'ga_id' )){
-			?>
-				<script type="text/javascript">
-					var _gaq = _gaq || [];
-					_gaq.push(['_setAccount', '<?php echo $o->getParam( 'ga_id' ) ?>']);
-					_gaq.push(['_trackPageview']);
-					(function() {
-					var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
-					ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
-					var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
-					})();
-				</script>
-			<?php
-		}
-		if($o->getParam( 'external' )){
-			?>
-				<style>
-					a:hover.external{
-						padding-right:14px;
-						background:url("<?php echo plugins_url("jquery.external/external.gif", __FILE__) ?>") no-repeat right 3px #ffffcc;
-						color:#ff00ff;
-					}
-				</style>
-				<script type="text/javascript" src="<?php echo plugins_url("jquery.external/jquery.external.js", __FILE__) ?>"></script>
-				<script type="text/javascript">
-					$('a').external();
-				</script>
-			<?php
-		}
-		if($o->getParam( 'prettify' )){
-			?>
-				<link rel="stylesheet" type="text/css" media="screen" href="<?php echo plugins_url("google-code-prettify/prettify-a.css", __FILE__) ?>">
-				<script type="text/javascript" src="<?php echo plugins_url("google-code-prettify/prettify.js", __FILE__) ?>"></script>
-				<script type="text/javascript">
-					$('pre').each(function(){
-						$(this)[0].className || $(this).addClass('prettyprint linenums');
-					});
-					prettyPrint();
-				</script>
-			<?php
-		}
-
+		?>
+			<script type="text/javascript">
+				jQuery.mysetting = <?php echo json_encode($this->options); ?>;
+			</script>
+		<?php
 	}
 
 	function prePingAction( &$links ){
@@ -203,5 +237,22 @@ class MySetting {
 	function wpPrintScriptsAction(){
 		if($this->getParam( 'no_autosave' ) == '1') wp_deregister_script('autosave');
 	}
+
+	function wpEnqueueScripts(){
+		if ( !is_admin() ) {
+			wp_enqueue_style( 'sitekit', plugins_url("jquery.sitekit/sitekit.css", __FILE__));
+			wp_enqueue_script( 'jquery.sitekit', plugins_url("jquery.sitekit/jquery.sitekit.js", __FILE__), array('jquery'),false,true);
+
+			if($this->getParam( 'prettify' )){
+				wp_enqueue_style( 'google-code-prettify', plugins_url("google-code-prettify/prettify-a.css", __FILE__));
+				wp_enqueue_script( 'google-code-prettify', plugins_url("google-code-prettify/prettify.js", __FILE__), array('jquery'),false,true);
+			}
+
+			wp_enqueue_script( 'my-setting', plugins_url("my-setting.js", __FILE__), array('jquery.sitekit','google-code-prettify'),false,true);
+		}
+	}
+
+
+
 }
 $mySetting = new MySetting;

@@ -1,0 +1,5 @@
+a:hover.external{
+	padding-right:14px;
+	background:url("external.gif") no-repeat right 3px #ffffcc;
+	color:#ff00ff;
+}

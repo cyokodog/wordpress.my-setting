@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+<title>jQuery Site Kit</title>
+<link rel="stylesheet" type="text/css" media="screen" href="sitekit.css">
+
+<style>
+body{
+	font-family:Meiryo;
+	xbackground:#aaccff;
+}
+h1,h2{
+	font-weight:normal;
+	font-family:Impact;
+	color:#777;
+	text-transform:uppercase;
+}
+a:visited,
+a{
+	color:#335588;
+	text-decoration:none;
+}
+a:hover{
+	color:#ff5577;
+}
+dt{
+	margin:8px 0;
+}
+dd{
+	margin:8px 0 32px;
+}
+
+</style>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.8.2/jquery.min.js"></script>
+<script src="jquery.sitekit.js"></script>
+<script>
+jQuery(function(){
+	$('dl.demo1 dt a').socialButtons({
+		appendTo : 'dl.demo dd'
+	});
+
+	$('ul.demo2 a').hatebuUsers();
+
+	$('div.demo3').googleCustomSearch({
+		cx : '003362715722494588328:pri8pejovqg',
+		showSearchButton : false
+	});
+
+
+});
+</script>
+</head>
+<body>
+	<h1>jQuery Site Kit</h1>
+
+	<h2>Social Buttons</h2>
+
+	<dl class="demo1">
+		<dt><a href="http://d.hatena.ne.jp/cyokodog/20081016/jquerylinks01">jQuery 関連記事まとめ - Cyokodog :: Diary</a></dt>
+		<dd></dd>
+		<dt><a href="http://d.hatena.ne.jp/cyokodog/20090224/jQueryPosSet01">jQuery の位置・サイズ関連メソッドまとめ - Cyokodog :: Diary</a></dt>
+		<dd></dd>
+
+		<dt><a href="http://cyokodog.tumblr.com/post/37170454444/ex-demo">jsdo.it みたいなことが簡単にできる jQuery プラグイン作ってみた - CYOKOLOG</a></dt>
+		<dd></dd>
+		<dt><a href="http://cyokodog.tumblr.com/post/38835740744/ie-version">IE のレンダリングバージョンの指定と判定方法の自分なりまとめ - CYOKOLOG</a></dt>
+		<dd></dd>
+
+		<dt><a href="http://www.cyokodog.net/blog/wordpress-my-setting-plugin/">WordPress のこまごました設定をまとめてできるプラグインを書いてみた - Cyokodog</a></dt>
+		<dd></dd>
+		<dt><a href="http://www.cyokodog.net/blog/jquery19-browser/">jQuery 1.9 で $.browser が使えなくなってしまった対策 - Cyokodog</a></dt>
+		<dd></dd>
+	</dl>
+
+	<h2>Hatebu Users</h2>
+
+	<ul class="demo2">
+		<li><a href="http://d.hatena.ne.jp/cyokodog/20081016/jquerylinks01">jQuery 関連記事まとめ - Cyokodog :: Diary</a></li>
+		<li><a href="http://d.hatena.ne.jp/cyokodog/20090224/jQueryPosSet01">jQuery の位置・サイズ関連メソッドまとめ - Cyokodog :: Diary</a></li>
+	</ul>
+
+	<h2>Google Custom Search</h2>
+
+	<div class="demo3">
+	</div>
+</body>
+</html>
