@@ -4,7 +4,7 @@ Plugin Name: MySetting
 Plugin URI: http://www.cyokodog.net
 Description: function.phpに書くのが面倒なかゆいとこを設定できるプラグイン
 Author: cyokodog
-Version: 0.1
+Version: 0.2
 Author URI: http://www.cyokodog.net
 */
 class MySetting {
