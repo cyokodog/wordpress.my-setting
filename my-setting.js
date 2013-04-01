@@ -41,7 +41,7 @@
 	}
 
 	if(my.ga_id){
-		$.googleAnalytics(my.ga_id);
+		//$.googleAnalytics(my.ga_id);
 	}
 
 	if(my.prettify){
