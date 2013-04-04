@@ -1,7 +1,7 @@
 ;(function($){
 	var my = $.mysetting;
 
-	if(my.hatebu_users){
+	if(my.hatebu_users == '1'){
 		$($.mysetting.hatebu_users_code || 'a').hatebuUsers();
 	}
 
@@ -36,22 +36,21 @@
 	})();
 
 
-	if(my.external){
+	if(my.external == '1'){
 		$('a').external();
 	}
 
-	if(my.ga_id){
+	if(my.ga_id != ''){
 		//$.googleAnalytics(my.ga_id);
 	}
 
-	if(my.prettify){
+	if(my.prettify == '1'){
 		$('pre').each(function(){
 			$(this)[0].className || $(this).addClass('prettyprint linenums');
 		});
 		prettyPrint();
 	}
-
-	if(my.google_search_id){
+	if(my.google_search_id != ''){
 		if(my.google_search_replace == '1'){
 			$('<div class="google-search"/>').insertAfter('#searchform').googleCustomSearch({
 				cx : my.google_search_id
@@ -65,8 +64,6 @@
 			});
 		}
 	}
-
-
 
 })(jQuery);
 

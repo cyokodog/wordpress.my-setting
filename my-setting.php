@@ -262,7 +262,7 @@ class MySetting {
 				wp_enqueue_script( 'google-code-prettify', plugins_url("google-code-prettify/prettify.js", __FILE__), array('jquery'),false,true);
 			}
 
-			wp_enqueue_script( 'my-setting', plugins_url("my-setting.js", __FILE__), array('jquery.sitekit','google-code-prettify'),false,true);
+			wp_enqueue_script( 'my-setting', plugins_url("my-setting.js", __FILE__), array('jquery.sitekit'),false,true);
 		}
 	}
 
