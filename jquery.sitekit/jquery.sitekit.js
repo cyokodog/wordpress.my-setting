@@ -230,10 +230,7 @@
 			$.hatebuUsers(target.prop('href'),function(count){
 				!count ||
 					target.after('<a class="hatebu-users" target="_blank"/>').next().text(count+'users').prop({
-						'href' :
-							'http://b.hatena.ne.jp/entry/' +
-							target.prop('hostname') + 
-							target.prop('pathname')
+						'href' : 'http://b.hatena.ne.jp/entry/' + target.prop('href').replace(/^https*:\/\//,'')
 					});
 			});
 		});
